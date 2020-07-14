@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../store/action/actions';
-import classes from './pagination.module.css'
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
+import Container from 'react-bootstrap/Container'
 
 class Pagination extends Component {
 
@@ -21,14 +23,14 @@ class Pagination extends Component {
         if (this.props.data) {
             details = (
                 this.props.pageContent.map(current => {
-                    return <tr key={current.appId}>
+                    return (<tr key={current.appId}>
                             <td>{current.appId}</td>
                             <td>{current.downloadBytes}</td>
                             <td>{current.sessionsCount}</td>
-                        </tr>
+                        </tr>)
                 })
             )
-            table = <table>
+            table = <Table bordered striped hover responsive>
                         <thead>
                             <tr>
                                 <th>App Id</th>
@@ -39,26 +41,26 @@ class Pagination extends Component {
                         <tbody> 
                             {details}
                         </tbody>
-                    </table>   
+                    </Table>   
             disable = this.props.pagenumber ===1? true: false
             forwardButton = Math.floor(this.props.data.length/5) === this.props.pagenumber ; 
         }
         
         
         return (
-            this.props.data? <div>
+            this.props.data? <Container>
                 <span>No of rows per page </span>
                 <select>
-                    <option value={5} selected>5</option>
+                    <option value={5} defaultValue>5</option>
                     <option value={10}>10</option>
                     <option value={15}>15</option>
                     <option value={20}>20</option>
                 </select>
                 {table}
-                <button onClick={this.props.previousPage} disabled={disable}>{symbol}</button>
+                <Button onClick={this.props.previousPage} disabled={disable}>{symbol}</Button>
                 <span>page number {this.props.pagenumber}</span>
-                <button onClick={this.props.nextPage} disabled={forwardButton}>></button>
-            </div>: null
+                <Button onClick={this.props.nextPage} disabled={forwardButton}>></Button>
+            </Container>: null
         )
         
     }
