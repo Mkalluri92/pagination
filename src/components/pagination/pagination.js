@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../store/action/actions';
-import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container'
+import Container from 'react-bootstrap/Container';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Pagination from 'react-bootstrap/Pagination';
 
-class Pagination extends Component {
+class PaginationTable extends Component {
 
     componentDidMount () {
-        console.log('mounted');
+       // console.log('mounted');
         //debugger;
         this.props.getData();
     }
@@ -17,8 +18,7 @@ class Pagination extends Component {
         let details = null
         let table= null
         let disable;
-        let forwardButton;
-        let symbol = "<";
+        let forwardButtonDisable;
 
         if (this.props.data) {
             details = (
@@ -43,23 +43,40 @@ class Pagination extends Component {
                         </tbody>
                     </Table>   
             disable = this.props.pagenumber ===1? true: false
-            forwardButton = Math.floor(this.props.data.length/5) === this.props.pagenumber ; 
+            forwardButtonDisable = Math.floor(this.props.data.length/this.props.noOfRecords) === this.props.pagenumber ; 
         }
         
         
         return (
-            this.props.data? <Container>
-                <span>No of rows per page </span>
-                <select>
-                    <option value={5} defaultValue>5</option>
-                    <option value={10}>10</option>
-                    <option value={15}>15</option>
-                    <option value={20}>20</option>
-                </select>
+            this.props.data? 
+            <Container>
+                <Dropdown>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Rows per page
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu onClick={(event) => this.props.selectNoOfRows(event)}>
+                        <Dropdown.Item href="#/5">5</Dropdown.Item>
+                        <Dropdown.Item href="#/10">10</Dropdown.Item>
+                        <Dropdown.Item href="#/15">15</Dropdown.Item>
+                        <Dropdown.Item href="#/20">20</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
                 {table}
-                <Button onClick={this.props.previousPage} disabled={disable}>{symbol}</Button>
-                <span>page number {this.props.pagenumber}</span>
-                <Button onClick={this.props.nextPage} disabled={forwardButton}>></Button>
+                <Pagination>
+                    <Pagination.First disabled={disable}/>
+                    <Pagination.Prev onClick={this.props.previousPage} disabled={disable}/>
+                    <Pagination.Item active>{1}</Pagination.Item>
+                    <Pagination.Item>{2}</Pagination.Item>
+                    <Pagination.Item>{3}</Pagination.Item>
+                    <Pagination.Item>{4}</Pagination.Item>
+                    <Pagination.Item>{5}</Pagination.Item>
+
+                    <Pagination.Ellipsis disabled/>
+                    <Pagination.Item>{Math.floor(this.props.data.length/this.props.noOfRecords)}</Pagination.Item>
+                    <Pagination.Next onClick={this.props.nextPage} disabled={forwardButtonDisable}/>
+                    <Pagination.Last disabled={forwardButtonDisable}/>
+                </Pagination>
             </Container>: null
         )
         
@@ -70,7 +87,8 @@ const mapStateToProps = (state) => {
     return {
         data: state.data,
         pageContent: state.pageContent,
-        pagenumber: state.pagenumber
+        pagenumber: state.pagenumber,
+        noOfRecords: state.noOfRecords
     }
 }
 
@@ -78,9 +96,10 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getData: () => dispatch(actions.GET_DATA()),
         nextPage: () => dispatch(actions.NEXT_PAGE()),
-        previousPage: () => dispatch(actions.PREVIOUS_PAGE())
+        previousPage: () => dispatch(actions.PREVIOUS_PAGE()),
+        selectNoOfRows: (event) => dispatch(actions.SELECT_NO_OF_ROWS(event.target.text))
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Pagination);
+export default connect(mapStateToProps,mapDispatchToProps)(PaginationTable);
 

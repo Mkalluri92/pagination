@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
-import Pagination from './components/pagination/pagination';
+import PaginationTable from './components/pagination/pagination';
 
 function App() {
   return (
-    <Pagination />
+    <PaginationTable />
   );
 }
 

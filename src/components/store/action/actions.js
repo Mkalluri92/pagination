@@ -19,3 +19,11 @@ export const PREVIOUS_PAGE = () => {
         type: 'GO_BACKWARD',
     }
 }
+
+export const SELECT_NO_OF_ROWS = (noOfRows) => {
+    console.log(noOfRows);
+    return {
+        type: 'SELECT_ROWS',
+        rowsCount: noOfRows
+    }
+}
